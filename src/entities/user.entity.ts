@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { UserBet } from './userbet.entity';
+import { Transaction } from './transaction.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -42,4 +44,10 @@ export class User {
   public updated_at: Date;
   @Column({ type: 'datetime', nullable: true })
   public deleted_at: Date;
+
+  @OneToMany(() => UserBet, (userBet) => userBet.user)
+  userBets: UserBet[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transaction: UserBet[];
 }
