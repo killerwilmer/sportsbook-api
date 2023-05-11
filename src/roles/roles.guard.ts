@@ -18,13 +18,13 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user; // Obtener usuario autenticado desde la solicitud (debe implementarse el middleware de autenticación)
+    const user = request.user;
 
     if (!user || !user.role) {
       // Usuario no autenticado o no se especificó el rol del usuario
       return false;
     }
 
-    return requiredRoles.includes(user.role); // Verificar si el rol del usuario coincide con los roles requeridos
+    return requiredRoles.includes(user.role);
   }
 }
