@@ -14,6 +14,7 @@ import { UserRole } from '../roles/roles.enum';
 import { RolesGuard } from '../roles/roles.guard';
 import { JwtAuthGuard } from '../auth.guard';
 import { DepositDto } from './dto/deposit.dto';
+import { WithdrawDto } from './dto/withdraw.dto';
 
 @Controller('users')
 export class UsersController {
@@ -38,5 +39,12 @@ export class UsersController {
     const { amount } = depositDto;
 
     return this.usersService.depositMoney(userId, amount);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('withdraw')
+  async withdrawMoney(@Request() req, @Body() withdrawDto: WithdrawDto) {
+    const userId = req.user.id;
+    return this.usersService.withdrawMoney(userId, withdrawDto.amount);
   }
 }

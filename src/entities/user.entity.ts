@@ -29,6 +29,8 @@ export class User {
   @Column({ nullable: true })
   public country_id: number;
   @Column({ nullable: true })
+  public balance: number;
+  @Column({ nullable: true })
   public city: string;
   @Column({ nullable: true })
   public category: string;
