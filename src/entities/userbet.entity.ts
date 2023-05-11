@@ -14,34 +14,33 @@ export class UserBet {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'user_id' })
-  userId: number;
-
-  @Column({ name: 'bet_id' })
-  betId: number;
-
-  @Column()
+  @Column({ nullable: true })
   odd: number;
 
-  @Column()
+  @Column({ nullable: true })
   amount: number;
 
-  @Column()
+  @Column({ nullable: true })
   state: string;
 
-  @Column({ name: 'created_at' })
+  @Column({
+    nullable: true,
+    name: 'created_at',
+    type: 'datetime',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   createdAt: Date;
 
-  @Column({ name: 'updated_at' })
+  @Column({ nullable: true, name: 'updated_at', type: 'datetime' })
   updatedAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   deleted: boolean;
 
-  @Column({ name: 'deleted_at' })
+  @Column({ nullable: true, name: 'deleted_at', type: 'datetime' })
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.userBets)
+  @ManyToOne(() => User, (user) => user.user_bets)
   user: User;
 
   @ManyToOne(() => Bet, (bet) => bet.userBets)

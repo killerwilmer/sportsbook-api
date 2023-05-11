@@ -16,8 +16,10 @@ export class User {
   public phone: string;
   @Column({ nullable: true })
   public email: string;
-  @Column({ nullable: true })
+  @Column({ unique: true })
   public username: string;
+  @Column({ nullable: true })
+  public password: string;
   @Column({ nullable: true })
   public address: string;
   @Column({ nullable: true })
@@ -45,9 +47,9 @@ export class User {
   @Column({ type: 'datetime', nullable: true })
   public deleted_at: Date;
 
-  @OneToMany(() => UserBet, (userBet) => userBet.user)
-  userBets: UserBet[];
-
   @OneToMany(() => Transaction, (transaction) => transaction.user)
-  transaction: UserBet[];
+  transactions: Transaction[];
+
+  @OneToMany(() => UserBet, (userBet) => userBet.user)
+  user_bets: UserBet[];
 }

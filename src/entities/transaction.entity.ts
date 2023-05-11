@@ -7,34 +7,33 @@ export class Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'user_id' })
-  userId: number;
-
-  @Column()
+  @Column({ nullable: true })
   amount: number;
 
-  @Column()
+  @Column({ nullable: true })
   category: string;
 
-  @Column()
+  @Column({ nullable: true })
   status: string;
 
-  @Column({ name: 'created_at' })
+  @Column({
+    nullable: true,
+    type: 'datetime',
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   createdAt: Date;
 
-  @Column({ name: 'updated_at' })
+  @Column({ nullable: true, type: 'datetime', name: 'updated_at' })
   updatedAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   deleted: boolean;
 
-  @Column({ name: 'deleted_at' })
+  @Column({ nullable: true, type: 'datetime', name: 'deleted_at' })
   deletedAt: Date;
 
-  @Column({ name: 'user_bet_id', nullable: true })
-  userBetId: number;
-
-  @ManyToOne(() => User, (user) => user.transaction)
+  @ManyToOne(() => User, (user) => user.transactions)
   user: User;
 
   @ManyToOne(() => UserBet, (userBet) => userBet.transactions)
