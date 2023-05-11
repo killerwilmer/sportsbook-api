@@ -2,36 +2,69 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Bet } from '../entities/bet.entity';
+import { PlaceBetDto } from './place.dto';
+import { User } from '../entities/user.entity';
+import { UserBet } from '../entities/userbet.entity';
+import { Transaction } from '../entities/transaction.entity';
 
 @Injectable()
 export class BetService {
   constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Bet)
     private readonly betRepository: Repository<Bet>,
+    @InjectRepository(UserBet)
+    private readonly userBetRepository: Repository<UserBet>,
+    @InjectRepository(Transaction)
+    private readonly transactionRepository: Repository<Transaction>,
   ) {}
 
-  async placeBet(
-    eventId: number,
-    betOption: string,
-    amount: number,
-    userId: number,
-  ): Promise<any> {
-    // Implement the logic to place a bet on a specific event
-    // Save the bet details to the database
-    // Perform any necessary operations
+  async createPlaceBet(placeBetDto: PlaceBetDto) {
+    const { userId, betId, amount } = placeBetDto;
+    let user: User;
+    let bet: Bet;
 
-    const bet = new Bet();
-    bet.betOption = betOption;
-    bet.eventId = eventId;
-    // Set other bet properties
+    // Obtener el usuario y la apuesta
+    try {
+      user = await this.userRepository.findOneOrFail({
+        where: { id: userId },
+      });
+    } catch (error) {
+      return {
+        error: 'El usuario no existe',
+      };
+    }
+    try {
+      bet = await this.betRepository.findOneOrFail({
+        where: { id: betId },
+      });
+    } catch (error) {
+      return {
+        error: 'La apuesta no existe',
+      };
+    }
 
-    // Save the bet to the database
-    const savedBet = await this.betRepository.save(bet);
+    // Crear una nueva apuesta y establecer las relaciones
+    const userBet = new UserBet();
+    userBet.user = user;
+    userBet.bet = bet;
+    userBet.amount = amount;
 
+    const savedUserBet = await this.userBetRepository.save(userBet);
+
+    const transaction = new Transaction();
+    transaction.user = user;
+    transaction.amount = amount;
+    transaction.category = 'bet';
+    transaction.status = 'pending';
+    transaction.userBet = userBet;
+    // Guardar la transacción
+    const savedTransaction = await this.transactionRepository.save(transaction);
+
+    // Guardar la apuesta en la base de datos
     return {
-      success: true,
-      message: 'Bet placed successfully',
-      data: savedBet,
+      userBet: savedUserBet,
+      transaction: savedTransaction,
     };
   }
 
