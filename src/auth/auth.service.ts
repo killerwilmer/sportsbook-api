@@ -14,7 +14,12 @@ export class AuthService {
   ) {}
 
   async generateToken(user: User): Promise<string> {
-    const payload = { sub: user.id, username: user.username };
+    const payload = {
+      sub: user.id,
+      username: user.username,
+      balance: user.cash_on_hand,
+    };
+
     return this.jwtService.sign(payload);
   }
 
@@ -22,8 +27,6 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: { username: username },
     });
-
-    console.log(user);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       return user;

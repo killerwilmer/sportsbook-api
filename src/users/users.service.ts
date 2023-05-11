@@ -42,7 +42,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    user.balance += amount;
+    user.cash_on_hand += amount;
 
     const transaction = new Transaction();
     transaction.user = user;
@@ -66,11 +66,11 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    if (amount > user.balance) {
+    if (amount > user.cash_on_hand) {
       throw new BadRequestException('Insufficient balance');
     }
 
-    user.balance -= amount;
+    user.cash_on_hand -= amount;
 
     const transaction = new Transaction();
     transaction.user = user;
@@ -83,5 +83,17 @@ export class UsersService {
     await this.userRepository.save(user);
 
     return transaction;
+  }
+
+  async checkUserBalance(userId: number, amount: number): Promise<boolean> {
+    const user = await this.userRepository.findOneOrFail({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user.cash_on_hand >= amount;
   }
 }

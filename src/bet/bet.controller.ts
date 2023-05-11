@@ -4,16 +4,16 @@ import { BetService } from './bet.service';
 import { Bet } from '../entities/bet.entity';
 import { PlaceBetDto } from './place.dto';
 import { JwtAuthGuard } from '../auth.guard';
+import { BalanceAuthGuard } from '../balance-auth.guard';
 
 @Controller('bets')
 export class BetController {
   constructor(private readonly betService: BetService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, BalanceAuthGuard)
   @Post('place')
   async createPlaceBet(@Body() placeBetDto: PlaceBetDto) {
     const errors = await validate(placeBetDto);
-    console.log(errors);
     if (errors.length > 0) {
       return { errors };
     }
