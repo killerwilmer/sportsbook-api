@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -21,6 +22,7 @@ import { BetModule } from './bet/bet.module';
     UsersModule,
     AuthModule,
     BetModule,
+    SwaggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

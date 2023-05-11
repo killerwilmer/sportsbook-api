@@ -16,7 +16,9 @@ import { JwtAuthGuard } from '../auth.guard';
 import { DepositDto } from './dto/deposit.dto';
 import { WithdrawDto } from './dto/withdraw.dto';
 import { BalanceAuthGuard } from '../balance-auth.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -28,6 +30,7 @@ export class UsersController {
     return this.usersService.getUsers();
   }
 
+  @ApiOperation({ summary: 'Create user' })
   @Post()
   createUser(@Body() newUser: CreateUserDto): Promise<User> {
     return this.usersService.createUser(newUser);
