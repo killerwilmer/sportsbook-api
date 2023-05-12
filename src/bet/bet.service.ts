@@ -20,7 +20,7 @@ export class BetService {
   ) {}
 
   async createPlaceBet(placeBetDto: PlaceBetDto) {
-    const { userId, betId, amount } = placeBetDto;
+    const { userId, betId, amount, state } = placeBetDto;
     let user: User;
     let bet: Bet;
 
@@ -49,6 +49,7 @@ export class BetService {
     userBet.user = user;
     userBet.bet = bet;
     userBet.amount = amount;
+    userBet.state = state;
 
     const savedUserBet = await this.userBetRepository.save(userBet);
 

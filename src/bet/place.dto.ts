@@ -8,4 +8,5 @@ export class PlaceBetDto {
   @IsNotEmpty()
   @IsNumber()
   amount: number;
+  state: string;
 }

@@ -23,9 +23,10 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @ApiOperation({ summary: 'List users' })
   @Get()
   @Roles(UserRole.Admin)
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   getUsers(): Promise<User[]> {
     return this.usersService.getUsers();
   }
@@ -36,6 +37,7 @@ export class UsersController {
     return this.usersService.createUser(newUser);
   }
 
+  @ApiOperation({ summary: 'Make a deposit' })
   @UseGuards(JwtAuthGuard)
   @Post('deposit')
   async depositMoney(@Request() req, @Body() depositDto: DepositDto) {
@@ -45,6 +47,7 @@ export class UsersController {
     return this.usersService.depositMoney(userId, amount);
   }
 
+  @ApiOperation({ summary: 'Make withdraw' })
   @UseGuards(JwtAuthGuard, BalanceAuthGuard)
   @Post('withdraw')
   async withdrawMoney(@Request() req, @Body() withdrawDto: WithdrawDto) {
