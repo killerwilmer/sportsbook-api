@@ -1,3 +1,3 @@
 export const enviroments = {
-  NODE_ENV: 'prod',
+  NODE_ENV: 'dev',
 };
